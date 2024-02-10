@@ -1,0 +1,20 @@
+<div>
+  <mat-form-field appearance="fill">
+    <mat-label>Nova Tarefa</mat-label>
+    <input matInput [(ngModel)]="newTask" (keyup.enter)="addTask()">
+  </mat-form-field>
+  <button mat-raised-button color="primary" (click)="addTask()">Adicionar Tarefa</button>
+</div>
+
+<div *ngIf="tasks.length > 0">
+  <h2>Tarefas</h2>
+  <mat-list>
+    <mat-list-item *ngFor="let task of tasks; let i = index">
+      <span mat-line>{{ task }}</span>
+      <button mat-icon-button color="warn" (click)="deleteTask(i)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-list-item>
+  </mat-list>
+  <button mat-raised-button color="accent" (click)="shareTasks()">Compartilhar Tarefas</button>
+</div>
