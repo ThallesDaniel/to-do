@@ -10,6 +10,6 @@ export class ShareModalComponent {
   tasksLink: string;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { tasks: string[] }) {
-    this.tasksLink = 'https://example.com/share/tasks?data=' + JSON.stringify(data.tasks);
+    this.tasksLink = 'https://new-to-do-app-nu.vercel.app/share/tasks?data=' + JSON.stringify(data.tasks);
   }
 }
