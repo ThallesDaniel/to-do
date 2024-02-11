@@ -1,20 +1,48 @@
-<div>
+<div class="input-container">
   <mat-form-field appearance="fill">
     <mat-label>Nova Tarefa</mat-label>
-    <input matInput [(ngModel)]="newTask" (keyup.enter)="addTask()">
+    <input matInput [(ngModel)]="newTask" (keyup.enter)="addTask()" class="task-input" name="newTask">
   </mat-form-field>
-  <button mat-raised-button color="primary" (click)="addTask()">Adicionar Tarefa</button>
+  <button mat-raised-button color="primary" (click)="addTask()" class="add-button">Adicionar Tarefa</button>
 </div>
 
-<div *ngIf="tasks.length > 0">
-  <h2>Tarefas</h2>
-  <mat-list>
-    <mat-list-item *ngFor="let task of tasks; let i = index">
-      <span mat-line>{{ task }}</span>
-      <button mat-icon-button color="warn" (click)="deleteTask(i)">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </mat-list-item>
-  </mat-list>
-  <button mat-raised-button color="accent" (click)="shareTasks()">Compartilhar Tarefas</button>
+<div class="task-list-container">
+  <div *ngIf="tasks.length > 0">
+    <h2>Tarefas</h2>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <ng-container matColumnDef="task">
+        <th mat-header-cell *matHeaderCellDef>Tarefa</th>
+        <td mat-cell *matCellDef="let task">{{ task.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="completed">
+        <th mat-header-cell *matHeaderCellDef>Concluído</th>
+        <td mat-cell *matCellDef="let task">
+          <mat-checkbox [(ngModel)]="task.completed" (change)="updateTask(task)"></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef>Remover</th>
+        <td mat-cell *matCellDef="let task">
+          <button mat-icon-button color="warn" (click)="deleteTask(task)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="edit">
+        <th mat-header-cell *matHeaderCellDef>Editar</th>
+        <td mat-cell *matCellDef="let task">
+          <button mat-icon-button color="primary" (click)="editTask(task)">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['task', 'completed', 'delete', 'edit']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['task', 'completed', 'delete', 'edit'];"></tr>
+    </table>
+    <button mat-raised-button color="accent" (click)="shareTasks()">Compartilhar Tarefas</button>
+  </div>
 </div>

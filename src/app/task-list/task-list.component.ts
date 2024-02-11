@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { ShareModalComponent } from './../share-modal/share-modal.component';
+import { Task } from '../interface/task';
 
 @Component({
   selector: 'app-task-list',
@@ -6,19 +10,43 @@ import { Component } from '@angular/core';
   styleUrls: ['./task-list.component.scss']
 })
 export class TaskListComponent {
-  tasks: string[] = [];
+  tasks: Task[] = [];
   newTask: string = '';
+  dataSource: MatTableDataSource<Task>;
+
+  constructor(private dialog: MatDialog) {
+    this.dataSource = new MatTableDataSource<Task>(this.tasks);
+  }
 
   addTask() {
     if (this.newTask.trim() !== '') {
-      this.tasks.push(this.newTask);
+      const newTask: Task = { name: this.newTask, completed: false };
+      this.tasks.push(newTask);
       this.saveTasks();
+      this.dataSource.data = this.tasks;
       this.newTask = '';
     }
   }
 
-  deleteTask(index: number) {
-    this.tasks.splice(index, 1);
+  deleteTask(task: Task) {
+    const index = this.tasks.indexOf(task);
+    if (index !== -1) {
+      this.tasks.splice(index, 1);
+      this.saveTasks();
+      this.dataSource.data = this.tasks;
+    }
+  }
+
+  editTask(task: Task) {
+    const newTaskName = prompt('Editar tarefa:', task.name);
+    if (newTaskName !== null) {
+      task.name = newTaskName;
+      this.saveTasks();
+      this.dataSource.data = this.tasks;
+    }
+  }
+
+  updateTask(task: Task) {
     this.saveTasks();
   }
 
@@ -30,13 +58,14 @@ export class TaskListComponent {
     const savedTasks = localStorage.getItem('tasks');
     if (savedTasks) {
       this.tasks = JSON.parse(savedTasks);
+      this.dataSource.data = this.tasks;
     }
   }
 
   shareTasks() {
-    const taskData = JSON.stringify(this.tasks);
-    // Implementar a lógica para compartilhar as tarefas, por exemplo, criar um link de compartilhamento
-    alert('Tarefas compartilhadas: ' + taskData);
+    const dialogRef = this.dialog.open(ShareModalComponent, {
+      width: '300px',
+      data: { tasks: this.tasks }
+    });
   }
 }
-

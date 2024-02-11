@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>Compartilhar Tarefas</h2>
+<mat-dialog-content>
+  <p>Aqui está o link para compartilhar suas tarefas:</p>
+  <a [href]="tasksLink" target="_blank"></a>
+  <p>{{ tasksLink }}</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Fechar</button>
+</mat-dialog-actions>
